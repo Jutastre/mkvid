@@ -5,10 +5,10 @@ import numpy as np
 import moviepy.editor as mpy
 
 FPS = 30
-FACTOR = 16
-SAVE_IMAGES = False
+FACTOR = 4
+SAVE_IMAGES = True
 SAVE_VIDEO = True
-VERBOSE = True
+VERBOSE = False
 COSINE = 0.5
 
 
@@ -16,6 +16,8 @@ def main(argv:list):
     global FPS, FACTOR, VERBOSE
     directoryName = "output" if SAVE_IMAGES else "tmp"
     while len(argv) > 1:
+        if argv[0].lower() in ['--dir','-dir','-d']:
+            os.chdir(argv[1])
         if argv[0].lower() in ['--fps','-fps','-f']:
             FPS = int(argv[1])
         if argv[0].lower() in ['--interpolationfactor','-i']:
@@ -40,7 +42,6 @@ def main(argv:list):
         raise Exception
     if not (0 <= COSINE <= 1):
         raise Exception
-
     try:
         os.mkdir(directoryName)
     except:
@@ -50,7 +51,7 @@ def main(argv:list):
 
 
         allFiles = os.listdir(os.getcwd())
-        imageFiles = [filename for filename in allFiles if filename[-4:].lower() == ".png"]
+        imageFiles = [filename for filename in sorted(allFiles) if filename[-4:].lower() == ".png"]
 
         if not imageFiles:
             print("Error: No png files found!")
@@ -110,13 +111,13 @@ def main(argv:list):
             allFiles = os.listdir(os.path.join(os.getcwd(), directoryName))
             imagelist = [
                 os.path.join(directoryName, filename)
-                for filename in allFiles
+                for filename in sorted(allFiles)
                 if filename[-4:].lower() == ".png"
             ]
         else:
-            allFiles = os.listdir(os.getcwd())
+            allFiles = os.listdir(os.getcwd()).sort()
             imagelist = [
-                filename for filename in allFiles if filename[-4:].lower() == ".png"
+                filename for filename in sorted(allFiles) if filename[-4:].lower() == ".png"
             ]
 
         clip = mpy.ImageSequenceClip(imagelist, fps=FPS)
