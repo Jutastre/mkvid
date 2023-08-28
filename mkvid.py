@@ -6,7 +6,7 @@ import moviepy.editor as mpy
 
 FPS = 30
 FACTOR = 4
-SAVE_IMAGES = True
+SAVE_IMAGES = False
 SAVE_VIDEO = True
 VERBOSE = False
 COSINE = 0.5
@@ -42,10 +42,7 @@ def main(argv:list):
         raise Exception
     if not (0 <= COSINE <= 1):
         raise Exception
-    try:
-        os.mkdir(directoryName)
-    except:
-        pass
+
 
     if FACTOR != 1:
 
@@ -54,7 +51,12 @@ def main(argv:list):
         imageFiles = [filename for filename in sorted(allFiles) if filename[-4:].lower() == ".png"]
 
         if not imageFiles:
-            print("Error: No png files found!")
+            print("Error: No png files found")
+            sys.exit(1)
+        try:
+            os.mkdir(directoryName)
+        except:
+            print("Error: Could not create directory")
             sys.exit(1)
 
         output = []
