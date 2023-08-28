@@ -13,7 +13,7 @@ COSINE = 0.5
 
 
 def main(argv:list):
-    global FPS, FACTOR, VERBOSE
+    global FPS, FACTOR, VERBOSE, COSINE
     directoryName = "output" if SAVE_IMAGES else "tmp"
     while len(argv) > 1:
         if argv[0].lower() in ['--dir','-dir','-d']:
@@ -23,7 +23,7 @@ def main(argv:list):
         if argv[0].lower() in ['--interpolationfactor','-i']:
             FACTOR = int(argv[1])
         if argv[0].lower() in ['--cosine','-c']:
-            FACTOR = float(argv[1])
+            COSINE = float(argv[1])
         if argv[0].lower() in ['--verbose','-v']:
             VERBOSE = True
         if argv[0].lower() in ['--silent','-s']:
