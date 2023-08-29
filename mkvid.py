@@ -103,9 +103,7 @@ def main(argv: list[str]):
             desc=f"Saving Images in /{directoryName}/",
             leave=True if VERBOSE else False,
         ):
-            image.save(
-                os.path.join(directoryName, f"{str(n).rjust(8,'0') }.png"), "PNG"
-            )
+            image.save(os.path.join(directoryName, f"{str(n).rjust(8,'0')}.png"), "PNG")
             n += 1
         if VERBOSE:
             print(f"Finished saving images in /{directoryName}/")
