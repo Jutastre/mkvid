@@ -12,48 +12,47 @@ VERBOSE = False
 COSINE = 0.5
 
 
-def main(argv:list[str]):
+def main(argv: list[str]):
     global FPS, FACTOR, SAVE_IMAGES, SAVE_VIDEO, VERBOSE, COSINE
     directoryName = "output" if SAVE_IMAGES else "tmp"
     while len(argv) > 1:
-        if argv[0].lower() in ['--dir','-dir','-d']:
+        if argv[0].lower() in ["--dir", "-dir", "-d"]:
             os.chdir(argv[1])
-        if argv[0].lower() in ['--fps','-fps','-f']:
+        if argv[0].lower() in ["--fps", "-fps", "-f"]:
             FPS = int(argv[1])
-        if argv[0].lower() in ['--interpolationfactor','-i']:
+        if argv[0].lower() in ["--interpolationfactor", "-i"]:
             FACTOR = int(argv[1])
-        if argv[0].lower() in ['--cosine','-c']:
+        if argv[0].lower() in ["--cosine", "-c"]:
             COSINE = float(argv[1])
-        if argv[0].lower() in ['--verbose','-v']:
+        if argv[0].lower() in ["--verbose", "-v"]:
             VERBOSE = True
-        if argv[0].lower() in ['--silent','-s']:
+        if argv[0].lower() in ["--silent", "-s"]:
             VERBOSE = False
-        if argv[0].lower() in ['--save-images','-img']:
+        if argv[0].lower() in ["--save-images", "-img"]:
             SAVE_IMAGES = True
-        if argv[0].lower() in ['--images-only','-imo']:
+        if argv[0].lower() in ["--images-only", "-imo"]:
             SAVE_IMAGES = True
             SAVE_VIDEO = False
         argv.pop()
     while len(argv) > 0:
-        if argv[0].lower() in ['--verbose','-v']:
+        if argv[0].lower() in ["--verbose", "-v"]:
             VERBOSE = True
-        if argv[0].lower() in ['--silent','-s']:
+        if argv[0].lower() in ["--silent", "-s"]:
             VERBOSE = False
         argv.pop()
-    #print([2**i for i in range(1,16)])
-    if FACTOR not in [2**i for i in range(1,16)]:
+    # print([2**i for i in range(1,16)])
+    if FACTOR not in [2**i for i in range(1, 16)]:
         raise Exception
     if not (1 < FPS < 255):
         raise Exception
     if not (0 <= COSINE <= 1):
         raise Exception
 
-
     if FACTOR != 1:
-
-
         allFiles = os.listdir(os.getcwd())
-        imageFiles = [filename for filename in sorted(allFiles) if filename[-4:].lower() == ".png"]
+        imageFiles = [
+            filename for filename in sorted(allFiles) if filename[-4:].lower() == ".png"
+        ]
 
         if not imageFiles:
             print("Error: No png files found")
@@ -75,7 +74,6 @@ def main(argv:list[str]):
             desc="Interpolating",
             leave=True if VERBOSE else False,
         ):
-
             # while i < len(imagelist):
 
             lastImage = Image.open(imageFiles[i - 1])
@@ -85,10 +83,10 @@ def main(argv:list[str]):
                 # print (j)
                 linear = (1.0 / FACTOR) * (j + 1)
 
-                cosine = 0.5-(np.cos(linear*np.pi)/2)
-                #print(cosine)
+                cosine = 0.5 - (np.cos(linear * np.pi) / 2)
+                # print(cosine)
 
-                blend = (linear * (1-COSINE)) + (cosine * COSINE)
+                blend = (linear * (1 - COSINE)) + (cosine * COSINE)
                 # print (blend)
                 output.append(Image.blend(lastImage, currentImage, blend))
 
@@ -113,7 +111,7 @@ def main(argv:list[str]):
             print(f"Finished saving images in /{directoryName}/")
 
     if SAVE_VIDEO:
-        print('Saving video...',end='\r')
+        print("Saving video...", end="\r")
         if FACTOR != 1:
             allFiles = os.listdir(os.path.join(os.getcwd(), directoryName))
             imagelist = [
@@ -125,7 +123,9 @@ def main(argv:list[str]):
             allFiles = os.listdir(os.getcwd())
             allFiles.sort()
             imagelist = [
-                filename for filename in sorted(allFiles) if filename[-4:].lower() == ".png"
+                filename
+                for filename in sorted(allFiles)
+                if filename[-4:].lower() == ".png"
             ]
 
         clip = mpy.ImageSequenceClip(imagelist, fps=FPS)
