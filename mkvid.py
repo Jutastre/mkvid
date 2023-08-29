@@ -12,8 +12,8 @@ VERBOSE = False
 COSINE = 0.5
 
 
-def main(argv:list):
-    global FPS, FACTOR, VERBOSE, COSINE
+def main(argv:list[str]):
+    global FPS, FACTOR, SAVE_IMAGES, SAVE_VIDEO, VERBOSE, COSINE
     directoryName = "output" if SAVE_IMAGES else "tmp"
     while len(argv) > 1:
         if argv[0].lower() in ['--dir','-dir','-d']:
@@ -28,6 +28,11 @@ def main(argv:list):
             VERBOSE = True
         if argv[0].lower() in ['--silent','-s']:
             VERBOSE = False
+        if argv[0].lower() in ['--save-images','-img']:
+            SAVE_IMAGES = True
+        if argv[0].lower() in ['--images-only','-imo']:
+            SAVE_IMAGES = True
+            SAVE_VIDEO = False
         argv.pop()
     while len(argv) > 0:
         if argv[0].lower() in ['--verbose','-v']:
@@ -117,7 +122,8 @@ def main(argv:list):
                 if filename[-4:].lower() == ".png"
             ]
         else:
-            allFiles = os.listdir(os.getcwd()).sort()
+            allFiles = os.listdir(os.getcwd())
+            allFiles.sort()
             imagelist = [
                 filename for filename in sorted(allFiles) if filename[-4:].lower() == ".png"
             ]
